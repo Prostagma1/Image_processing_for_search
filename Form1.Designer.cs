@@ -43,13 +43,22 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.PanelForMask = new System.Windows.Forms.Panel();
+            this.panelForSearch = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.listBox2 = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.PanelForMask.SuspendLayout();
+            this.panelForSearch.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(576, 37);
+            this.pictureBox1.Location = new System.Drawing.Point(437, 37);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(569, 435);
             this.pictureBox1.TabIndex = 0;
@@ -190,11 +199,85 @@
             this.PanelForMask.TabIndex = 35;
             this.PanelForMask.Visible = false;
             // 
+            // panelForSearch
+            // 
+            this.panelForSearch.Controls.Add(this.listBox2);
+            this.panelForSearch.Controls.Add(this.button2);
+            this.panelForSearch.Controls.Add(this.textBox9);
+            this.panelForSearch.Controls.Add(this.textBox8);
+            this.panelForSearch.Controls.Add(this.textBox7);
+            this.panelForSearch.Controls.Add(this.label5);
+            this.panelForSearch.Controls.Add(this.label4);
+            this.panelForSearch.Location = new System.Drawing.Point(186, 199);
+            this.panelForSearch.Name = "panelForSearch";
+            this.panelForSearch.Size = new System.Drawing.Size(245, 161);
+            this.panelForSearch.TabIndex = 36;
+            this.panelForSearch.Visible = false;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(50, 16);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Radius";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(111, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(52, 16);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Density";
+            // 
+            // textBox7
+            // 
+            this.textBox7.Location = new System.Drawing.Point(3, 24);
+            this.textBox7.Name = "textBox7";
+            this.textBox7.Size = new System.Drawing.Size(100, 22);
+            this.textBox7.TabIndex = 3;
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(3, 52);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(100, 22);
+            this.textBox8.TabIndex = 4;
+            // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(114, 24);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.Size = new System.Drawing.Size(100, 22);
+            this.textBox9.TabIndex = 5;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(6, 80);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(97, 67);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "Поиск объектов";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // listBox2
+            // 
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.ItemHeight = 16;
+            this.listBox2.Location = new System.Drawing.Point(114, 52);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(120, 100);
+            this.listBox2.TabIndex = 7;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1189, 621);
+            this.Controls.Add(this.panelForSearch);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
@@ -204,6 +287,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.PanelForMask.ResumeLayout(false);
             this.PanelForMask.PerformLayout();
+            this.panelForSearch.ResumeLayout(false);
+            this.panelForSearch.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -225,6 +310,14 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Panel PanelForMask;
+        private System.Windows.Forms.Panel panelForSearch;
+        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.Button button2;
     }
 }
 

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LABA3
@@ -32,7 +27,6 @@ namespace LABA3
                 for (int x = 0; x < inputBitmap.Width; x++)
                 {
                     var currentPixel = inputBitmap.GetPixel(x, y);
-                    visitedArr[y, x] = false;
                     if (currentPixel.R < RGB[0] || currentPixel.R > RGB[1] ||
                         currentPixel.G < RGB[2] || currentPixel.G > RGB[3] ||
                         currentPixel.B < RGB[4] || currentPixel.B > RGB[5])
@@ -89,6 +83,11 @@ namespace LABA3
             pictureBox1.Image = checkBox1.Checked ? mask : currentBitmap;
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void button4_Click(object sender, EventArgs e)
         {
             byte[] cr = new byte[6];
@@ -96,6 +95,7 @@ namespace LABA3
                 byte.TryParse(textBox4.Text, out cr[3]) && byte.TryParse(textBox5.Text, out cr[4]) && byte.TryParse(textBox6.Text, out cr[5]))
             {
                 DoMask(cr, currentBitmap, out mask, out visited);
+                panelForSearch.Visible = true;
 
             }
             else
