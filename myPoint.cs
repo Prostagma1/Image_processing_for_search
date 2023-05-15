@@ -34,6 +34,10 @@ namespace LABA3
             {
                 Y1 = y;
             }
+            WidthAndHeight();
+        }
+        public void WidthAndHeight()
+        {
             Width = Math.Abs(X1 - X0);
             Height = Math.Abs(Y1 - Y0);
         }

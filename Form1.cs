@@ -10,7 +10,7 @@ namespace LABA3
     {
         List<string> paths = new List<string> { };
         bool[,] visited;
-        Bitmap currentBitmap, mask;
+        Bitmap currentBitmap, mask, bitmapForRect;
         List<myPoint> clust, trueClust;
         int countClusters = 0;
         int numberOfCycles = 0;
@@ -70,13 +70,16 @@ namespace LABA3
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBox1.Items.Count > 0)
+            if (listBox1.SelectedIndex != -1)
             {
                 currentBitmap = new Bitmap(paths[listBox1.SelectedIndex]);
                 pictureBox1.Height = currentBitmap.Height;
                 pictureBox1.Width = currentBitmap.Width;
                 pictureBox1.Image = currentBitmap;
                 PanelForMask.Visible = true;
+                panelForSearch.Visible = false;
+                listBox2.Items.Clear();
+                checkBox1.Checked = false;
             }
 
         }
@@ -108,6 +111,19 @@ namespace LABA3
                 }
             }
         }
+        
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox2.SelectedIndex <= clust.Count)
+            {
+                bitmapForRect = (Bitmap)currentBitmap.Clone();
+                Graphics g = Graphics.FromImage(bitmapForRect);
+                g.DrawRectangle(new Pen(Color.Red), clust[listBox2.SelectedIndex].RetRect());
+                pictureBox1.Image = bitmapForRect;
+                g.Dispose();
+
+            }
+        }
         private void SearchAround(int x0, int y0, int n = 3)
         {
             if (numberOfCycles < 5000)
@@ -120,7 +136,7 @@ namespace LABA3
                         {
                             if (mask.GetPixel(x, y) == Color.FromArgb(255, 255, 255))
                             {
-                                if (visited[y, x] == false)
+                                if (!visited[y,x])
                                 {
                                     visited[y, x] = true;
                                     clust[countClusters].ChangeCoords(x, y);
@@ -129,11 +145,9 @@ namespace LABA3
                                 }
                             }
                         }
-
                     }
                 }
             }
-
         }
 
         private void button4_Click(object sender, EventArgs e)
