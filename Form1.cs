@@ -11,6 +11,9 @@ namespace LABA3
         List<string> paths = new List<string> { };
         bool[,] visited;
         Bitmap currentBitmap, mask;
+        List<myPoint> clust, trueClust;
+        int countClusters = 0;
+        int numberOfCycles = 0;
         public Form1()
         {
             InitializeComponent();
@@ -85,6 +88,51 @@ namespace LABA3
 
         private void button2_Click(object sender, EventArgs e)
         {
+            listBox2.Items.Clear();
+            clust = new List<myPoint>();
+            trueClust = new List<myPoint>();
+            countClusters = 0;
+            
+            for (int y = 0; y < mask.Height; y++)
+            {
+                for (int x = 0; x < mask.Width; x++)
+                {
+                    if (mask.GetPixel(x, y) != Color.FromArgb(0, 0, 0) && !visited[y, x])
+                    {
+                        clust.Add(new myPoint { X0 = int.MaxValue, X1 = 0, Y0 = int.MaxValue, Y1 = 0 });
+                        numberOfCycles = 0;
+                        SearchAround(x, y);
+                        listBox2.Items.Add(clust[countClusters].stringForListbox());
+                        countClusters++;
+                    }
+                }
+            }
+        }
+        private void SearchAround(int x0, int y0, int n = 3)
+        {
+            if (numberOfCycles < 5000)
+            {
+                for (int y = y0 - n; y < y0 + n; y++)
+                {
+                    for (int x = x0 - n; x < x0 + n; x++)
+                    {
+                        if (x >= 0 && x < currentBitmap.Width && y >= 0 && y < currentBitmap.Height)
+                        {
+                            if (mask.GetPixel(x, y) == Color.FromArgb(255, 255, 255))
+                            {
+                                if (visited[y, x] == false)
+                                {
+                                    visited[y, x] = true;
+                                    clust[countClusters].ChangeCoords(x, y);
+                                    numberOfCycles++;
+                                    SearchAround(x, y);
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
 
         }
 
