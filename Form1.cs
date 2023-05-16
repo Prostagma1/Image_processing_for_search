@@ -11,6 +11,7 @@ namespace LABA3
         List<string> paths = new List<string> { };
         bool[,] visited;
         Bitmap currentBitmap, mask, bitmapForRect;
+        readonly Pen penForRect = new Pen(Color.Red, 1);
         List<myPoint> clust, trueClust;
         int countClusters = 0;
         int numberOfCycles = 0;
@@ -95,33 +96,33 @@ namespace LABA3
             clust = new List<myPoint>();
             trueClust = new List<myPoint>();
             countClusters = 0;
-            
+
             for (int y = 0; y < mask.Height; y++)
             {
                 for (int x = 0; x < mask.Width; x++)
                 {
                     if (mask.GetPixel(x, y) != Color.FromArgb(0, 0, 0) && !visited[y, x])
                     {
-                        clust.Add(new myPoint { X0 = int.MaxValue, X1 = 0, Y0 = int.MaxValue, Y1 = 0 });
-                        numberOfCycles = 0;
-                        SearchAround(x, y);
+                        clust.Add(new myPoint { X0 = x, X1 = x, Y0 = y, Y1 = y });
+                        /*                        numberOfCycles = 0;
+                                                SearchAround(x, y);*/
+                        clust[countClusters] = CheckClusters(visited, mask, clust[countClusters], int.Parse(textBox9.Text), int.Parse(textBox7.Text), int.Parse(textBox8.Text));
                         listBox2.Items.Add(clust[countClusters].stringForListbox());
                         countClusters++;
                     }
                 }
             }
         }
-        
+
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox2.SelectedIndex <= clust.Count)
             {
                 bitmapForRect = (Bitmap)currentBitmap.Clone();
                 Graphics g = Graphics.FromImage(bitmapForRect);
-                g.DrawRectangle(new Pen(Color.Red), clust[listBox2.SelectedIndex].RetRect());
+                g.DrawRectangle(penForRect, clust[listBox2.SelectedIndex].RetRect());
                 pictureBox1.Image = bitmapForRect;
                 g.Dispose();
-
             }
         }
         private void SearchAround(int x0, int y0, int n = 3)
@@ -136,7 +137,7 @@ namespace LABA3
                         {
                             if (mask.GetPixel(x, y) == Color.FromArgb(255, 255, 255))
                             {
-                                if (!visited[y,x])
+                                if (!visited[y, x])
                                 {
                                     visited[y, x] = true;
                                     clust[countClusters].ChangeCoords(x, y);
@@ -148,6 +149,36 @@ namespace LABA3
                     }
                 }
             }
+        }
+
+        private myPoint CheckClusters(bool[,] data, Bitmap inputMaskBitmap, myPoint inputPoint, int density, int rMin, int rMax)
+        {
+            int n = 5;
+            myPoint temp = new myPoint() { X0 = inputPoint.X0, X1 = inputPoint.X1, Y0 = inputPoint.Y0, Y1 = inputPoint.Y1 };
+
+            for (int x = temp.X0 - n; x < temp.X1 + n; x++)
+            {
+                if (x >= 0 && x < inputMaskBitmap.Width)
+                {
+                    for (int y = temp.Y0 - n; y < temp.Y1 + n; y++)
+                    {
+                        if (y >= 0 && y < inputMaskBitmap.Height)
+                        {
+                            if (!data[y, x])
+                            {
+                                temp.CountPixel++;
+                                data[y, x] = true;
+                                if (inputMaskBitmap.GetPixel(x, y) == Color.FromArgb(255, 255, 255))
+                                {
+                                    temp.CountWhitePixel++;
+                                    temp.ChangeCoords(x, y);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return temp;
         }
 
         private void button4_Click(object sender, EventArgs e)

@@ -11,6 +11,15 @@ namespace LABA3
         public int Y1 { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public int Radius { get; set; }
+        public int CountPixel { get; set; }
+        public int CountWhitePixel { get; set; }
+        public double Density { get; set; }
+
+        public void СalculationDensity()
+        {
+            Density = CountWhitePixel / CountPixel;
+        }
 
         public bool CheckValue(int w = 20, int h = 100)
         {
@@ -35,11 +44,13 @@ namespace LABA3
                 Y1 = y;
             }
             WidthAndHeight();
+            СalculationDensity();
         }
         public void WidthAndHeight()
         {
             Width = Math.Abs(X1 - X0);
             Height = Math.Abs(Y1 - Y0);
+            Radius = Math.Max(Width, Height)/2;
         }
         public int Diff()
         {
