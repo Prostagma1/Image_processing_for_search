@@ -43,6 +43,7 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.PanelForMask = new System.Windows.Forms.Panel();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.panelForSearch = new System.Windows.Forms.Panel();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
@@ -199,6 +200,19 @@
             this.PanelForMask.TabIndex = 35;
             this.PanelForMask.Visible = false;
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Ключ для красных цветов",
+            "Ключ для синих цветов",
+            "Ключ для желтых цветов"});
+            this.comboBox1.Location = new System.Drawing.Point(0, 77);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(201, 24);
+            this.comboBox1.TabIndex = 37;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
             // panelForSearch
             // 
             this.panelForSearch.Controls.Add(this.listBox2);
@@ -208,7 +222,7 @@
             this.panelForSearch.Controls.Add(this.textBox7);
             this.panelForSearch.Controls.Add(this.label5);
             this.panelForSearch.Controls.Add(this.label4);
-            this.panelForSearch.Location = new System.Drawing.Point(186, 213);
+            this.panelForSearch.Location = new System.Drawing.Point(216, 199);
             this.panelForSearch.Name = "panelForSearch";
             this.panelForSearch.Size = new System.Drawing.Size(328, 164);
             this.panelForSearch.TabIndex = 36;
