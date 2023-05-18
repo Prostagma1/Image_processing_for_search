@@ -12,33 +12,36 @@ namespace LABA3
         bool[,] visited;
         Bitmap currentBitmap, mask, bitmapForRect;
         readonly Pen penForRect = new Pen(Color.Red, 1);
-        List<myPoint> clust, trueClust;
-        int countClusters = 0;
-        int numberOfCycles = 0;
+        List<myPixel> pixels;
+        List<myCluster> clusters;
         public Form1()
         {
             InitializeComponent();
         }
-        public void DoMask(byte[] RGB, Bitmap inputBitmap, out Bitmap outMask, out bool[,] visitedArr)
+        public void DoMask(byte[] RGB, Bitmap inputBitmap, out Bitmap outMask, out List<myPixel> outputPixels)
         {
+            outputPixels = new List<myPixel>();
+            myPixel.CountPixels = 0;
+            myPixel.CountClusters = -1;
             outMask = new Bitmap(inputBitmap.Width, inputBitmap.Height);
+
             var g = Graphics.FromImage(mask);
-            visitedArr = new bool[mask.Height, mask.Width];
-            g.Clear(Color.White);
+            g.Clear(Color.Black);
             g.Dispose();
+
             for (int y = 0; y < inputBitmap.Height; y++)
             {
                 for (int x = 0; x < inputBitmap.Width; x++)
                 {
                     var currentPixel = inputBitmap.GetPixel(x, y);
-                    if (currentPixel.R < RGB[0] || currentPixel.R > RGB[1] ||
-                        currentPixel.G < RGB[2] || currentPixel.G > RGB[3] ||
-                        currentPixel.B < RGB[4] || currentPixel.B > RGB[5])
-                    {
-                        // inputBitmap.SetPixel(x, y, Color.Black);
-                        mask.SetPixel(x, y, Color.Black);
-                    }
 
+                    if (currentPixel.R > RGB[0] && currentPixel.R < RGB[1] &&
+                        currentPixel.G > RGB[2] && currentPixel.G < RGB[3] &&
+                        currentPixel.B > RGB[4] && currentPixel.B < RGB[5])
+                    {
+                        outputPixels.Add(new myPixel(x, y));
+                        outMask.SetPixel(x, y, Color.White);
+                    }
                 }
             }
 
@@ -93,102 +96,97 @@ namespace LABA3
         private void button2_Click(object sender, EventArgs e)
         {
             listBox2.Items.Clear();
-            clust = new List<myPoint>();
-            trueClust = new List<myPoint>();
-            countClusters = 0;
-
-            for (int y = 0; y < mask.Height; y++)
+            clusters = new List<myCluster>();
+            myCluster.Count = -1;
+            Clustering(int.Parse(textBox8.Text), int.Parse(textBox7.Text), pixels,ref clusters);
+            for (int i = 0; i < clusters.Count; i++)
             {
-                for (int x = 0; x < mask.Width; x++)
-                {
-                    if (mask.GetPixel(x, y) != Color.FromArgb(0, 0, 0) && !visited[y, x])
-                    {
-                        clust.Add(new myPoint { X0 = x, X1 = x, Y0 = y, Y1 = y });
-                        /*                        numberOfCycles = 0;
-                                                SearchAround(x, y);*/
-                        clust[countClusters] = CheckClusters(visited, mask, clust[countClusters], int.Parse(textBox9.Text), int.Parse(textBox7.Text), int.Parse(textBox8.Text));
-                        listBox2.Items.Add(clust[countClusters].stringForListbox());
-                        countClusters++;
-                    }
-                }
+                listBox2.Items.Add(clusters[i]);
             }
         }
 
+        public void Clustering(int radiusMin, int radiusMax,List<myPixel> pixels,ref List<myCluster> clusters)
+        {
+            for (int i = 0; i < pixels.Count; i++)
+            {
+                if (pixels[i].cluster == -1)
+                {
+                    pixels[i].cluster = pixels[i].GetCurrentClusterId(true);
+                    clusters.Add(new myCluster(pixels[i]));
+
+                    for (int j = 0; j < pixels.Count; j++)
+                    {
+                        if (pixels[j].cluster == -1)
+                        {
+                            int len = clusters[myCluster.Count].LenToPoint(pixels[j]);
+
+                            if (len <= radiusMin && len >= radiusMax)
+                            {
+                                pixels[j].cluster = pixels[j].GetCurrentClusterId();
+                                clusters[myCluster.Count].CheckPoints(pixels[j]);
+                            }
+                        }
+                    }
+                }
+            }
+            clusters.RemoveAll(RemoveFakeClusters);
+        }
+        private bool RemoveFakeClusters(myCluster cluster)
+        {
+            return cluster.Height <= 5 || cluster.Width <= 5;
+        }
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBox2.SelectedIndex <= clust.Count)
+            int index = listBox2.SelectedIndex;
+            if (index != -1)
             {
-                bitmapForRect = (Bitmap)currentBitmap.Clone();
+                //bitmapForRect = (Bitmap)currentBitmap.Clone();
+                bitmapForRect = (Bitmap)currentBitmap;
                 Graphics g = Graphics.FromImage(bitmapForRect);
-                g.DrawRectangle(penForRect, clust[listBox2.SelectedIndex].RetRect());
+                g.DrawRectangle(penForRect, clusters[index].GetRectangle());
                 pictureBox1.Image = bitmapForRect;
                 g.Dispose();
             }
         }
-        private void SearchAround(int x0, int y0, int n = 3)
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (numberOfCycles < 5000)
+            switch (comboBox1.SelectedIndex)
             {
-                for (int y = y0 - n; y < y0 + n; y++)
-                {
-                    for (int x = x0 - n; x < x0 + n; x++)
-                    {
-                        if (x >= 0 && x < currentBitmap.Width && y >= 0 && y < currentBitmap.Height)
-                        {
-                            if (mask.GetPixel(x, y) == Color.FromArgb(255, 255, 255))
-                            {
-                                if (!visited[y, x])
-                                {
-                                    visited[y, x] = true;
-                                    clust[countClusters].ChangeCoords(x, y);
-                                    numberOfCycles++;
-                                    SearchAround(x, y);
-                                }
-                            }
-                        }
-                    }
-                }
+                case 0:
+                    ChangeTextBox(new string[,] { { "100", "255" }, { "0", "60" }, { "0", "50" } });
+                    break;
+                case 1:
+                    ChangeTextBox(new string[,] { { "0", "40" }, { "0", "80" }, { "70", "255" } });
+                    break;
+                case 2:
+                    ChangeTextBox(new string[,] { { "100", "255" }, { "100", "255" }, { "0", "60" } });
+                    break;
+                default: break;
             }
         }
-
-        private myPoint CheckClusters(bool[,] data, Bitmap inputMaskBitmap, myPoint inputPoint, int density, int rMin, int rMax)
+        private void ChangeTextBox(string[,] RGB)
         {
-            int n = 5;
-            myPoint temp = new myPoint() { X0 = inputPoint.X0, X1 = inputPoint.X1, Y0 = inputPoint.Y0, Y1 = inputPoint.Y1 };
+            textBox1.Text = RGB[0, 0]; //Rmin
+            textBox2.Text = RGB[0, 1]; //Rmax
 
-            for (int x = temp.X0 - n; x < temp.X1 + n; x++)
-            {
-                if (x >= 0 && x < inputMaskBitmap.Width)
-                {
-                    for (int y = temp.Y0 - n; y < temp.Y1 + n; y++)
-                    {
-                        if (y >= 0 && y < inputMaskBitmap.Height)
-                        {
-                            if (!data[y, x])
-                            {
-                                temp.CountPixel++;
-                                data[y, x] = true;
-                                if (inputMaskBitmap.GetPixel(x, y) == Color.FromArgb(255, 255, 255))
-                                {
-                                    temp.CountWhitePixel++;
-                                    temp.ChangeCoords(x, y);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return temp;
+            textBox3.Text = RGB[1, 0]; //Gmin
+            textBox4.Text = RGB[1, 1]; //Gmax
+
+            textBox5.Text = RGB[2, 0]; //Bmin
+            textBox6.Text = RGB[2, 1]; //Bmax
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             byte[] cr = new byte[6];
+
             if (byte.TryParse(textBox1.Text, out cr[0]) && byte.TryParse(textBox2.Text, out cr[1]) && byte.TryParse(textBox3.Text, out cr[2]) &&
                 byte.TryParse(textBox4.Text, out cr[3]) && byte.TryParse(textBox5.Text, out cr[4]) && byte.TryParse(textBox6.Text, out cr[5]))
             {
-                DoMask(cr, currentBitmap, out mask, out visited);
+                DoMask(cr, currentBitmap, out mask, out pixels);
                 panelForSearch.Visible = true;
+                checkBox1.Checked = false;
 
             }
             else
