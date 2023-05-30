@@ -52,10 +52,15 @@
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.panelForZoomed = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.PanelForMask.SuspendLayout();
             this.panelForSearch.SuspendLayout();
+            this.panelForZoomed.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -292,19 +297,38 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "Radius";
             // 
-            // panel1
+            // panelForZoomed
             // 
-            this.panel1.Location = new System.Drawing.Point(12, 415);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(538, 254);
-            this.panel1.TabIndex = 37;
+            this.panelForZoomed.Controls.Add(this.pictureBox3);
+            this.panelForZoomed.Controls.Add(this.pictureBox2);
+            this.panelForZoomed.Location = new System.Drawing.Point(12, 415);
+            this.panelForZoomed.Name = "panelForZoomed";
+            this.panelForZoomed.Size = new System.Drawing.Size(538, 254);
+            this.panelForZoomed.TabIndex = 37;
+            this.panelForZoomed.Visible = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Location = new System.Drawing.Point(5, 3);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(174, 174);
+            this.pictureBox2.TabIndex = 38;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Location = new System.Drawing.Point(216, 3);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(196, 174);
+            this.pictureBox3.TabIndex = 39;
+            this.pictureBox3.TabStop = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1501, 681);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panelForZoomed);
             this.Controls.Add(this.panelForSearch);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button1);
@@ -312,11 +336,15 @@
             this.Controls.Add(this.PanelForMask);
             this.Name = "Form1";
             this.Text = "Линчак ЛР3";
+            this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.PanelForMask.ResumeLayout(false);
             this.PanelForMask.PerformLayout();
             this.panelForSearch.ResumeLayout(false);
             this.panelForSearch.PerformLayout();
+            this.panelForZoomed.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -347,7 +375,9 @@
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panelForZoomed;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox3;
     }
 }
 

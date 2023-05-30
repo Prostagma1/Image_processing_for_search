@@ -10,8 +10,9 @@ namespace LABA3
     {
         List<string> paths = new List<string> { };
         bool[,] visited;
-        Bitmap currentBitmap, mask, bitmapForRect;
-        readonly Pen penForRect = new Pen(Color.Red, 1);
+        Bitmap currentBitmap, mask, bitmapForRect, zoomedRoadSignal;
+        readonly Pen penForRect = new Pen(Color.Green, 2);
+        Bitmap[] teamplates = new Bitmap[5];
         List<myPixel> pixels;
         List<myCluster> clusters;
         public Form1()
@@ -74,7 +75,7 @@ namespace LABA3
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex != -1)
+            if (listBox1.SelectedIndex != -1 )
             {
                 currentBitmap = new Bitmap(paths[listBox1.SelectedIndex]);
                 pictureBox1.Height = currentBitmap.Height;
@@ -82,6 +83,7 @@ namespace LABA3
                 pictureBox1.Image = currentBitmap;
                 PanelForMask.Visible = true;
                 panelForSearch.Visible = false;
+                panelForZoomed.Visible = false;
                 listBox2.Items.Clear();
                 checkBox1.Checked = false;
             }
@@ -123,7 +125,7 @@ namespace LABA3
             }
             for (int i = 0; i < clusters.Count; i++)
             {
-                listBox2.Items.Add(clusters[i]);
+                listBox2.Items.Add($"{i + 1} кластер");
             }
         }
 
@@ -169,13 +171,33 @@ namespace LABA3
             {
                 bitmapForRect = (Bitmap)currentBitmap.Clone();
                 //bitmapForRect = (Bitmap)currentBitmap;
+
                 Graphics g = Graphics.FromImage(bitmapForRect);
                 g.DrawRectangle(penForRect, clusters[index].GetRectangle());
                 pictureBox1.Image = bitmapForRect;
                 g.Dispose();
+
+                CopyAndZoomPic(currentBitmap, clusters[index].GetRectangle(), out zoomedRoadSignal);
+
+                panelForZoomed.Visible = true;
+                pictureBox2.Height = zoomedRoadSignal.Height;
+                pictureBox2.Width = zoomedRoadSignal.Width;
+                pictureBox2.Image = zoomedRoadSignal;
             }
         }
-
+        private void CopyAndZoomPic(Bitmap inputBitmap, Rectangle rectangleForZoom, out Bitmap outputBitmap)
+        {
+            Bitmap tempBitmap = new Bitmap(rectangleForZoom.Width + 1, rectangleForZoom.Height + 1);
+            for (int x = rectangleForZoom.X; x <= rectangleForZoom.X + rectangleForZoom.Width; x++)
+            {
+                for (int y = rectangleForZoom.Y; y <= rectangleForZoom.Y + rectangleForZoom.Height; y++)
+                {
+                    var colorPixel = inputBitmap.GetPixel(x, y);
+                    tempBitmap.SetPixel(x - rectangleForZoom.X, y - rectangleForZoom.Y, colorPixel);
+                }
+            }
+            outputBitmap = new Bitmap(tempBitmap, 128, 128);
+        }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (comboBox1.SelectedIndex)
@@ -192,6 +214,12 @@ namespace LABA3
                 default: break;
             }
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void ChangeTextBox(string[,] RGB)
         {
             textBox1.Text = RGB[0, 0]; //Rmin
@@ -222,6 +250,7 @@ namespace LABA3
                 return;
             }
             checkBox1.Visible = true;
+            panelForZoomed.Visible = false;
             pictureBox1.Image = currentBitmap;
         }
     }
