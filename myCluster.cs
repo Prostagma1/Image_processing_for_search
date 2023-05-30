@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace LABA3
 {
@@ -12,6 +13,7 @@ namespace LABA3
         public int Width;
         public int Height;
         public static int Count = -1;
+        public bool DeleteThisPoint = false;
 
         public myCluster(int x, int y)
         {
@@ -20,7 +22,7 @@ namespace LABA3
             Center = new Point(x, y);
             Count++;
         }
-        public myCluster(myPixel pixel)
+         public myCluster(myPixel pixel)
         {
             int x = pixel.x;
             int y = pixel.y;
@@ -34,7 +36,7 @@ namespace LABA3
         {
             Width = End.X - Start.X;
             Height = End.Y - Start.Y;
-            Center = new Point((End.X + Start.X)/2, (End.Y + Start.Y)/ 2);
+            Center = new Point((End.X + Start.X) / 2, (End.Y + Start.Y) / 2);
         }
         public void CheckPoints(int x, int y)
         {
@@ -79,21 +81,49 @@ namespace LABA3
             }
             WidthAndHeightAndCenter();
         }
+        public void CheckPoints(Point point)
+        {
+            int x = point.X;
+            int y = point.Y;
+
+            if (x > End.X)
+            {
+                End.X = x;
+            }
+            if (y > End.Y)
+            {
+                End.Y = y;
+            }
+            if (x < Start.X)
+            {
+                Start.X = x;
+            }
+            if (y < Start.Y)
+            {
+                Start.Y = y;
+            }
+            WidthAndHeightAndCenter();
+        }
         public Rectangle GetRectangle()
         {
-            return new Rectangle(Start.X, Start.Y,Width,Height);
+            return new Rectangle(Start.X, Start.Y, Width, Height);
         }
-        public int LenToPoint (int x, int y)
+        public int LenToPoint(int x, int y)
         {
-            double tempX = Math.Pow((Center.X - x),2);
+            double tempX = Math.Pow((Center.X - x), 2);
             double tempY = Math.Pow((Center.Y - y), 2);
             return (int)Math.Sqrt(tempY + tempX);
         }
-        public int LenToPoint(myPixel pixel) 
+        public int LenToPoint(myPixel pixel)
         {
             double tempX = Math.Pow((Center.X - pixel.x), 2);
             double tempY = Math.Pow((Center.Y - pixel.y), 2);
             return (int)Math.Sqrt(tempY + tempX);
+        }
+
+        public void IsRectangleOverlapping(myCluster otherCluster)
+        {
+            
         }
     }
 }

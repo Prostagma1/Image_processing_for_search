@@ -98,14 +98,36 @@ namespace LABA3
             listBox2.Items.Clear();
             clusters = new List<myCluster>();
             myCluster.Count = -1;
-            Clustering(int.Parse(textBox8.Text), int.Parse(textBox7.Text), pixels,ref clusters);
+            Clustering(int.Parse(textBox8.Text), int.Parse(textBox7.Text), pixels, ref clusters);
+
+            for (int i = 0; i < clusters.Count; i++)
+            {
+                for (int j = 0; j < clusters.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        if ((clusters[j].Start.X >= clusters[i].Start.X && clusters[j].Start.X <= clusters[i].End.X) ||
+                            (clusters[j].End.X >= clusters[i].Start.X && clusters[j].End.X <= clusters[i].End.X))
+                        {
+                            if ((clusters[j].Start.Y >= clusters[i].Start.Y && clusters[j].Start.Y <= clusters[i].End.Y) ||
+                                (clusters[j].End.Y >= clusters[i].Start.Y && clusters[j].End.Y <= clusters[i].End.Y))
+                            {
+                                clusters[j].DeleteThisPoint = true;
+                                clusters[i].CheckPoints(clusters[j].Start);
+                                clusters[i].CheckPoints(clusters[j].End);
+                            }
+                        }
+                    }
+                }
+                clusters.RemoveAll(RemoveOtherClusters);
+            }
             for (int i = 0; i < clusters.Count; i++)
             {
                 listBox2.Items.Add(clusters[i]);
             }
         }
 
-        public void Clustering(int radiusMin, int radiusMax,List<myPixel> pixels,ref List<myCluster> clusters)
+        public void Clustering(int radiusMin, int radiusMax, List<myPixel> pixels, ref List<myCluster> clusters)
         {
             for (int i = 0; i < pixels.Count; i++)
             {
@@ -135,13 +157,18 @@ namespace LABA3
         {
             return cluster.Height <= 5 || cluster.Width <= 5;
         }
+        private bool RemoveOtherClusters(myCluster cluster)
+        {
+            return cluster.DeleteThisPoint;
+        }
+
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = listBox2.SelectedIndex;
             if (index != -1)
             {
-                //bitmapForRect = (Bitmap)currentBitmap.Clone();
-                bitmapForRect = (Bitmap)currentBitmap;
+                bitmapForRect = (Bitmap)currentBitmap.Clone();
+                //bitmapForRect = (Bitmap)currentBitmap;
                 Graphics g = Graphics.FromImage(bitmapForRect);
                 g.DrawRectangle(penForRect, clusters[index].GetRectangle());
                 pictureBox1.Image = bitmapForRect;

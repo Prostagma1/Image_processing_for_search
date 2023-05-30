@@ -52,6 +52,7 @@
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.PanelForMask.SuspendLayout();
             this.panelForSearch.SuspendLayout();
@@ -291,11 +292,19 @@
             this.label4.TabIndex = 0;
             this.label4.Text = "Radius";
             // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(12, 415);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(538, 254);
+            this.panel1.TabIndex = 37;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1183, 621);
+            this.ClientSize = new System.Drawing.Size(1501, 681);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelForSearch);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button1);
@@ -338,6 +347,7 @@
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 
