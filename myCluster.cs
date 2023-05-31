@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows.Forms;
 
 namespace LABA3
 {
@@ -12,6 +11,7 @@ namespace LABA3
         public Point End;
         public int Width;
         public int Height;
+        public float CountWhitePixel;
         public static int Count = -1;
         public bool DeleteThisPoint = false;
 
@@ -22,7 +22,7 @@ namespace LABA3
             Center = new Point(x, y);
             Count++;
         }
-         public myCluster(myPixel pixel)
+        public myCluster(myPixel pixel)
         {
             int x = pixel.x;
             int y = pixel.y;
@@ -120,10 +120,9 @@ namespace LABA3
             double tempY = Math.Pow((Center.Y - pixel.y), 2);
             return (int)Math.Sqrt(tempY + tempX);
         }
-
-        public void IsRectangleOverlapping(myCluster otherCluster)
+        public float Density()
         {
-            
+            return CountWhitePixel / (Width * Height);
         }
     }
 }

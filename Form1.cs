@@ -9,7 +9,6 @@ namespace LABA3
     public partial class Form1 : Form
     {
         List<string> paths = new List<string> { };
-        bool[,] visited;
         Bitmap currentBitmap, mask, bitmapForRect, zoomedRoadSignal;
         readonly Pen penForRect = new Pen(Color.Green, 2);
         Bitmap[] teamplates = new Bitmap[5];
@@ -75,7 +74,7 @@ namespace LABA3
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex != -1 )
+            if (listBox1.SelectedIndex != -1)
             {
                 currentBitmap = new Bitmap(paths[listBox1.SelectedIndex]);
                 pictureBox1.Height = currentBitmap.Height;
@@ -100,29 +99,10 @@ namespace LABA3
             listBox2.Items.Clear();
             clusters = new List<myCluster>();
             myCluster.Count = -1;
-            Clustering(int.Parse(textBox8.Text), int.Parse(textBox7.Text), pixels, ref clusters);
 
-            for (int i = 0; i < clusters.Count; i++)
-            {
-                for (int j = 0; j < clusters.Count; j++)
-                {
-                    if (i != j)
-                    {
-                        if ((clusters[j].Start.X >= clusters[i].Start.X && clusters[j].Start.X <= clusters[i].End.X) ||
-                            (clusters[j].End.X >= clusters[i].Start.X && clusters[j].End.X <= clusters[i].End.X))
-                        {
-                            if ((clusters[j].Start.Y >= clusters[i].Start.Y && clusters[j].Start.Y <= clusters[i].End.Y) ||
-                                (clusters[j].End.Y >= clusters[i].Start.Y && clusters[j].End.Y <= clusters[i].End.Y))
-                            {
-                                clusters[j].DeleteThisPoint = true;
-                                clusters[i].CheckPoints(clusters[j].Start);
-                                clusters[i].CheckPoints(clusters[j].End);
-                            }
-                        }
-                    }
-                }
-                clusters.RemoveAll(RemoveOtherClusters);
-            }
+            Clustering(int.Parse(textBox8.Text), int.Parse(textBox7.Text), pixels, ref clusters);
+            MergingClusters(ref clusters);
+            DensityCalculation(mask,ref clusters);
             for (int i = 0; i < clusters.Count; i++)
             {
                 listBox2.Items.Add($"{i + 1} кластер");
@@ -153,15 +133,61 @@ namespace LABA3
                     }
                 }
             }
-            clusters.RemoveAll(RemoveFakeClusters);
         }
-        private bool RemoveFakeClusters(myCluster cluster)
+        public void MergingClusters(ref List<myCluster> clusters)
         {
-            return cluster.Height <= 5 || cluster.Width <= 5;
+            clusters.RemoveAll(RemoveVerySmallClusters);
+            for (int i = 0; i < clusters.Count; i++)
+            {
+                for (int j = 0; j < clusters.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        if ((clusters[j].Start.X >= clusters[i].Start.X && clusters[j].Start.X <= clusters[i].End.X) ||
+                            (clusters[j].End.X >= clusters[i].Start.X && clusters[j].End.X <= clusters[i].End.X))
+                        {
+                            if ((clusters[j].Start.Y >= clusters[i].Start.Y && clusters[j].Start.Y <= clusters[i].End.Y) ||
+                                (clusters[j].End.Y >= clusters[i].Start.Y && clusters[j].End.Y <= clusters[i].End.Y))
+                            {
+                                clusters[j].DeleteThisPoint = true;
+                                clusters[i].CheckPoints(clusters[j].Start);
+                                clusters[i].CheckPoints(clusters[j].End);
+                            }
+                        }
+                    }
+                }
+                clusters.RemoveAll(RemovalOfSiftedClusters);
+            }
         }
-        private bool RemoveOtherClusters(myCluster cluster)
+        public void DensityCalculation(Bitmap inputMaskBitmap, ref List<myCluster> clusters)
+        {
+            for (byte i = 0; i < clusters.Count; i++)
+            {
+                for (int x = clusters[i].Start.X; x <= clusters[i].End.X; x++)
+                {
+                    for (int  y = clusters[i].Start.Y; y <= clusters[i].End.Y; y++)
+                    {
+                        var currentPixel = inputMaskBitmap.GetPixel(x, y);
+                        if (currentPixel.R >= 10)
+                        {
+                            clusters[i].CountWhitePixel++;
+                        }
+                    }
+                }
+            }
+            clusters.RemoveAll(RemoveClusterByDensity);
+        }
+        private bool RemoveVerySmallClusters(myCluster cluster)
+        {
+            return cluster.Height <= 3 || cluster.Width <= 3;
+        }
+        private bool RemovalOfSiftedClusters(myCluster cluster)
         {
             return cluster.DeleteThisPoint;
+        }
+        private bool RemoveClusterByDensity(myCluster cluster)
+        {
+            return (cluster.Density() <= (float.Parse(textBox9.Text)/100));
         }
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -178,7 +204,6 @@ namespace LABA3
                 g.Dispose();
 
                 CopyAndZoomPic(currentBitmap, clusters[index].GetRectangle(), out zoomedRoadSignal);
-
                 panelForZoomed.Visible = true;
                 pictureBox2.Height = zoomedRoadSignal.Height;
                 pictureBox2.Width = zoomedRoadSignal.Width;
@@ -203,13 +228,13 @@ namespace LABA3
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    ChangeTextBox(new string[,] { { "100", "255" }, { "0", "60" }, { "0", "50" } });
+                    ChangeTextBox(new string[,] { { "100", "255" }, { "0", "60" }, { "0", "50" } }); // Для красных
                     break;
                 case 1:
-                    ChangeTextBox(new string[,] { { "0", "40" }, { "0", "80" }, { "70", "255" } });
+                    ChangeTextBox(new string[,] { { "0", "40" }, { "0", "100" }, { "70", "255" } }); // Для синих
                     break;
                 case 2:
-                    ChangeTextBox(new string[,] { { "100", "255" }, { "100", "255" }, { "0", "60" } });
+                    ChangeTextBox(new string[,] { { "100", "255" }, { "100", "255" }, { "0", "60" } }); // Для жёлтых 
                     break;
                 default: break;
             }
@@ -217,7 +242,10 @@ namespace LABA3
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            for (int i = 1; i < 6; i++)
+            {
+                teamplates[i - 1] = new Bitmap($@"D:\Study\4 sem\TechnicalVision\Template\{i}.png");
+            }
         }
 
         private void ChangeTextBox(string[,] RGB)
