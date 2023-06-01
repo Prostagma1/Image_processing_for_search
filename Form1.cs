@@ -9,7 +9,7 @@ namespace LABA3
     public partial class Form1 : Form
     {
         List<string> paths = new List<string> { };
-        Bitmap currentBitmap, mask, bitmapForRect, zoomedRoadSignal;
+        Bitmap currentBitmap, mask, bitmapForRect, zoomedRoadSignal, zoomedMask;
         readonly Pen penForRect = new Pen(Color.Green, 2);
         Bitmap[] teamplates = new Bitmap[5];
         List<myPixel> pixels;
@@ -102,7 +102,7 @@ namespace LABA3
 
             Clustering(int.Parse(textBox8.Text), int.Parse(textBox7.Text), pixels, ref clusters);
             MergingClusters(ref clusters);
-            DensityCalculation(mask,ref clusters);
+            DensityCalculation(mask, ref clusters);
             for (int i = 0; i < clusters.Count; i++)
             {
                 listBox2.Items.Add($"{i + 1} кластер");
@@ -165,7 +165,7 @@ namespace LABA3
             {
                 for (int x = clusters[i].Start.X; x <= clusters[i].End.X; x++)
                 {
-                    for (int  y = clusters[i].Start.Y; y <= clusters[i].End.Y; y++)
+                    for (int y = clusters[i].Start.Y; y <= clusters[i].End.Y; y++)
                     {
                         var currentPixel = inputMaskBitmap.GetPixel(x, y);
                         if (currentPixel.R >= 10)
@@ -187,7 +187,7 @@ namespace LABA3
         }
         private bool RemoveClusterByDensity(myCluster cluster)
         {
-            return (cluster.Density() <= (float.Parse(textBox9.Text)/100));
+            return (cluster.Density() <= (float.Parse(textBox9.Text) / 100));
         }
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -203,26 +203,114 @@ namespace LABA3
                 pictureBox1.Image = bitmapForRect;
                 g.Dispose();
 
-                CopyAndZoomPic(currentBitmap, clusters[index].GetRectangle(), out zoomedRoadSignal);
                 panelForZoomed.Visible = true;
-                pictureBox2.Height = zoomedRoadSignal.Height;
-                pictureBox2.Width = zoomedRoadSignal.Width;
-                pictureBox2.Image = zoomedRoadSignal;
+
+                CopyAndZoomPic(currentBitmap, mask, clusters[index].GetRectangle(), out zoomedRoadSignal, out zoomedMask);
+
+                if (checkBox2.Checked)
+                {
+                    SignDefinition();
+                }
             }
         }
-        private void CopyAndZoomPic(Bitmap inputBitmap, Rectangle rectangleForZoom, out Bitmap outputBitmap)
+        private void CopyAndZoomPic(Bitmap inputBitmap, Bitmap inputMask, Rectangle rectangleForZoom, out Bitmap outputBitmap, out Bitmap outputMask)
         {
             Bitmap tempBitmap = new Bitmap(rectangleForZoom.Width + 1, rectangleForZoom.Height + 1);
+            Bitmap tempBitmapMask = new Bitmap(rectangleForZoom.Width + 1, rectangleForZoom.Height + 1);
+
             for (int x = rectangleForZoom.X; x <= rectangleForZoom.X + rectangleForZoom.Width; x++)
             {
                 for (int y = rectangleForZoom.Y; y <= rectangleForZoom.Y + rectangleForZoom.Height; y++)
                 {
                     var colorPixel = inputBitmap.GetPixel(x, y);
+                    var colorPixelMask = inputMask.GetPixel(x, y);
                     tempBitmap.SetPixel(x - rectangleForZoom.X, y - rectangleForZoom.Y, colorPixel);
+                    tempBitmapMask.SetPixel(x - rectangleForZoom.X, y - rectangleForZoom.Y, colorPixelMask);
                 }
             }
             outputBitmap = new Bitmap(tempBitmap, 128, 128);
+            outputMask = new Bitmap(tempBitmapMask, 128, 128);
+            for (int x = 0; x < outputMask.Width; x++)
+            {
+                for (int y = 0; y < outputMask.Height; y++)
+                {
+                    var colorPixelMask = outputMask.GetPixel(x, y).R > 10 ? Color.White : Color.Black;
+                    outputMask.SetPixel(x, y, colorPixelMask);
+                }
+            }
         }
+        private void SignDefinition()
+        {
+            float maxScore = 0;
+            byte numMask = 0;
+            Bitmap selectedRoadSign = new Bitmap(teamplates[0].Width, teamplates[0].Height);
+            for (byte i = 0; i < teamplates.Length; i++)
+            {
+                float countPositive = 0;
+                int allPixel = teamplates[i].Width * teamplates[i].Height;
+
+                for (int x = 0; x < teamplates[i].Width; x++)
+                {
+                    for (int y = 0; y < teamplates[i].Height; y++)
+                    {
+                        var filterPixel = teamplates[i].GetPixel(x, y).R;
+                        var maskPixel = zoomedMask.GetPixel(x, y).R;
+
+                        if (maskPixel == 0)
+                        {
+                            switch (filterPixel)
+                            {
+                                case 5:
+                                    selectedRoadSign.SetPixel(x, y, Color.FromArgb(0, 0, 139)); // Тёмно-синий – пиксель не учитывается, но он «черный»
+                                    allPixel--;
+                                    break;
+                                case 255:
+                                    selectedRoadSign.SetPixel(x, y, Color.FromArgb(121, 6, 4)); // Темно-красный – пиксель должен быть «светлым» (на шаблоне), но он «черный»
+                                    break;
+                                case 0:
+                                    selectedRoadSign.SetPixel(x, y, Color.FromArgb(23, 114, 69)); // Темно-зелёный – пиксель должен быть «черным» (на шаблоне) и он «черный»
+                                    countPositive++;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (filterPixel)
+                            {
+                                case 5:
+                                    selectedRoadSign.SetPixel(x, y, Color.FromArgb(0, 0, 255)); // Светло-синий – пиксель не учитывается, но он «белый» (после фильтра)
+                                    allPixel--;
+                                    break;
+                                case 255:
+                                    selectedRoadSign.SetPixel(x, y, Color.FromArgb(144, 238, 144)); // Светло-зелёный – пиксель должен быть «белым» (на шаблоне) и он «белый»
+                                    countPositive++;
+                                    break;
+                                case 0:
+                                    selectedRoadSign.SetPixel(x, y, Color.FromArgb(255, 0, 0)); // Светло-красный – пиксель должен быть «темным» (на шаблоне), но он «белый»
+                                    break;
+                            }
+                        }
+
+                    }
+                }
+                if (countPositive / allPixel >= maxScore)
+                {
+                    maxScore = countPositive / allPixel;
+                    zoomedRoadSignal = (Bitmap)selectedRoadSign.Clone();
+                    numMask = i;
+                }
+            }
+            pictureBox2.Image = zoomedRoadSignal;
+            pictureBox3.Image = teamplates[numMask];
+            pictureBox4.Image = zoomedMask;
+            label6.Text = $"Степень совпадения с шаблоном = {maxScore*100}%";
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            panelForAuto.Visible = checkBox3.Checked;
+        }
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             switch (comboBox1.SelectedIndex)
@@ -246,6 +334,7 @@ namespace LABA3
             {
                 teamplates[i - 1] = new Bitmap($@"D:\Study\4 sem\TechnicalVision\Template\{i}.png");
             }
+            comboBox1.SelectedIndex = 1;
         }
 
         private void ChangeTextBox(string[,] RGB)
@@ -279,6 +368,7 @@ namespace LABA3
             }
             checkBox1.Visible = true;
             panelForZoomed.Visible = false;
+
             pictureBox1.Image = currentBitmap;
         }
     }

@@ -45,6 +45,7 @@
             this.PanelForMask = new System.Windows.Forms.Panel();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.panelForSearch = new System.Windows.Forms.Panel();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.button2 = new System.Windows.Forms.Button();
             this.textBox9 = new System.Windows.Forms.TextBox();
@@ -53,14 +54,22 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.panelForZoomed = new System.Windows.Forms.Panel();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.panelForAuto = new System.Windows.Forms.Panel();
+            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.PanelForMask.SuspendLayout();
             this.panelForSearch.SuspendLayout();
             this.panelForZoomed.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.panelForAuto.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -77,7 +86,7 @@
             this.listBox1.ItemHeight = 16;
             this.listBox1.Location = new System.Drawing.Point(12, 109);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(168, 84);
+            this.listBox1.Size = new System.Drawing.Size(204, 84);
             this.listBox1.TabIndex = 3;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -85,7 +94,7 @@
             // 
             this.button1.Location = new System.Drawing.Point(12, 37);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(168, 66);
+            this.button1.Size = new System.Drawing.Size(204, 66);
             this.button1.TabIndex = 2;
             this.button1.Text = "Выбрать папку с фото";
             this.button1.UseVisualStyleBackColor = true;
@@ -212,8 +221,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "Ключ для красных цветов",
-            "Ключ для синих цветов",
-            "Ключ для желтых цветов"});
+            "Ключ для синих цветов"});
             this.comboBox1.Location = new System.Drawing.Point(5, 73);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(196, 24);
@@ -222,6 +230,7 @@
             // 
             // panelForSearch
             // 
+            this.panelForSearch.Controls.Add(this.checkBox2);
             this.panelForSearch.Controls.Add(this.listBox2);
             this.panelForSearch.Controls.Add(this.button2);
             this.panelForSearch.Controls.Add(this.textBox9);
@@ -231,9 +240,21 @@
             this.panelForSearch.Controls.Add(this.label4);
             this.panelForSearch.Location = new System.Drawing.Point(222, 199);
             this.panelForSearch.Name = "panelForSearch";
-            this.panelForSearch.Size = new System.Drawing.Size(328, 164);
+            this.panelForSearch.Size = new System.Drawing.Size(328, 210);
             this.panelForSearch.TabIndex = 36;
             this.panelForSearch.Visible = false;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(6, 181);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(176, 20);
+            this.checkBox2.TabIndex = 8;
+            this.checkBox2.Text = "Определять тип знака";
+            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // listBox2
             // 
@@ -249,7 +270,7 @@
             // 
             this.button2.Location = new System.Drawing.Point(6, 80);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(97, 67);
+            this.button2.Size = new System.Drawing.Size(97, 72);
             this.button2.TabIndex = 6;
             this.button2.Text = "Поиск объектов";
             this.button2.UseVisualStyleBackColor = true;
@@ -299,19 +320,29 @@
             // 
             // panelForZoomed
             // 
+            this.panelForZoomed.Controls.Add(this.label6);
+            this.panelForZoomed.Controls.Add(this.pictureBox4);
             this.panelForZoomed.Controls.Add(this.pictureBox3);
             this.panelForZoomed.Controls.Add(this.pictureBox2);
             this.panelForZoomed.Location = new System.Drawing.Point(12, 415);
             this.panelForZoomed.Name = "panelForZoomed";
-            this.panelForZoomed.Size = new System.Drawing.Size(538, 254);
+            this.panelForZoomed.Size = new System.Drawing.Size(538, 363);
             this.panelForZoomed.TabIndex = 37;
             this.panelForZoomed.Visible = false;
             // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Location = new System.Drawing.Point(5, 168);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(174, 174);
+            this.pictureBox4.TabIndex = 38;
+            this.pictureBox4.TabStop = false;
+            // 
             // pictureBox3
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(216, 3);
+            this.pictureBox3.Location = new System.Drawing.Point(185, 3);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(196, 174);
+            this.pictureBox3.Size = new System.Drawing.Size(196, 159);
             this.pictureBox3.TabIndex = 39;
             this.pictureBox3.TabStop = false;
             // 
@@ -319,15 +350,64 @@
             // 
             this.pictureBox2.Location = new System.Drawing.Point(5, 3);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(174, 174);
+            this.pictureBox2.Size = new System.Drawing.Size(174, 159);
             this.pictureBox2.TabIndex = 38;
             this.pictureBox2.TabStop = false;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(185, 168);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(44, 16);
+            this.label6.TabIndex = 40;
+            this.label6.Text = "label6";
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(222, 37);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(109, 20);
+            this.checkBox3.TabIndex = 38;
+            this.checkBox3.Text = "Автоанализ";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            // 
+            // panelForAuto
+            // 
+            this.panelForAuto.Controls.Add(this.label7);
+            this.panelForAuto.Controls.Add(this.textBox10);
+            this.panelForAuto.Location = new System.Drawing.Point(222, 63);
+            this.panelForAuto.Name = "panelForAuto";
+            this.panelForAuto.Size = new System.Drawing.Size(325, 130);
+            this.panelForAuto.TabIndex = 39;
+            this.panelForAuto.Visible = false;
+            // 
+            // textBox10
+            // 
+            this.textBox10.Location = new System.Drawing.Point(6, 18);
+            this.textBox10.Name = "textBox10";
+            this.textBox10.Size = new System.Drawing.Size(100, 22);
+            this.textBox10.TabIndex = 0;
+            this.textBox10.Text = "70";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(3, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(212, 16);
+            this.label7.TabIndex = 40;
+            this.label7.Text = "Уровень доверия (в процентах)";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1501, 681);
+            this.ClientSize = new System.Drawing.Size(1501, 785);
+            this.Controls.Add(this.panelForAuto);
+            this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.panelForZoomed);
             this.Controls.Add(this.panelForSearch);
             this.Controls.Add(this.listBox1);
@@ -343,9 +423,14 @@
             this.panelForSearch.ResumeLayout(false);
             this.panelForSearch.PerformLayout();
             this.panelForZoomed.ResumeLayout(false);
+            this.panelForZoomed.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.panelForAuto.ResumeLayout(false);
+            this.panelForAuto.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -378,6 +463,13 @@
         private System.Windows.Forms.Panel panelForZoomed;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.Panel panelForAuto;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBox10;
     }
 }
 
