@@ -57,7 +57,6 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.panelForAuto = new System.Windows.Forms.Panel();
             this.textBox10 = new System.Windows.Forms.TextBox();
@@ -255,6 +254,7 @@
             this.checkBox2.TabIndex = 8;
             this.checkBox2.Text = "Определять тип знака";
             this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // listBox2
             // 
@@ -268,9 +268,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(6, 80);
+            this.button2.Location = new System.Drawing.Point(3, 80);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(97, 72);
+            this.button2.Size = new System.Drawing.Size(100, 72);
             this.button2.TabIndex = 6;
             this.button2.Text = "Поиск объектов";
             this.button2.UseVisualStyleBackColor = true;
@@ -320,7 +320,6 @@
             // 
             // panelForZoomed
             // 
-            this.panelForZoomed.Controls.Add(this.label6);
             this.panelForZoomed.Controls.Add(this.pictureBox4);
             this.panelForZoomed.Controls.Add(this.pictureBox3);
             this.panelForZoomed.Controls.Add(this.pictureBox2);
@@ -354,19 +353,10 @@
             this.pictureBox2.TabIndex = 38;
             this.pictureBox2.TabStop = false;
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(185, 168);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(44, 16);
-            this.label6.TabIndex = 40;
-            this.label6.Text = "label6";
-            // 
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(222, 37);
+            this.checkBox3.Location = new System.Drawing.Point(225, 37);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(109, 20);
             this.checkBox3.TabIndex = 38;
@@ -423,7 +413,6 @@
             this.panelForSearch.ResumeLayout(false);
             this.panelForSearch.PerformLayout();
             this.panelForZoomed.ResumeLayout(false);
-            this.panelForZoomed.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -465,7 +454,6 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.Panel panelForAuto;
         private System.Windows.Forms.Label label7;

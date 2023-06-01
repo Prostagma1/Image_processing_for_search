@@ -10,10 +10,14 @@ namespace LABA3
     {
         List<string> paths = new List<string> { };
         Bitmap currentBitmap, mask, bitmapForRect, zoomedRoadSignal, zoomedMask;
+        Bitmap selectedRoadSign;
         readonly Pen penForRect = new Pen(Color.Green, 2);
+        readonly Font fontForString = new Font("Consolas", 13);
+        readonly SolidBrush brushForString = new SolidBrush(Color.Red);
         Bitmap[] teamplates = new Bitmap[5];
         List<myPixel> pixels;
         List<myCluster> clusters;
+        bool auto = false;
         public Form1()
         {
             InitializeComponent();
@@ -76,17 +80,43 @@ namespace LABA3
         {
             if (listBox1.SelectedIndex != -1)
             {
+                currentBitmap?.Dispose();
                 currentBitmap = new Bitmap(paths[listBox1.SelectedIndex]);
                 pictureBox1.Height = currentBitmap.Height;
                 pictureBox1.Width = currentBitmap.Width;
                 pictureBox1.Image = currentBitmap;
-                PanelForMask.Visible = true;
-                panelForSearch.Visible = false;
-                panelForZoomed.Visible = false;
-                listBox2.Items.Clear();
-                checkBox1.Checked = false;
-            }
 
+                if (!auto)
+                {
+                    PanelForMask.Visible = true;
+                    panelForSearch.Visible = false;
+                    panelForZoomed.Visible = false;
+                    checkBox1.Checked = false;
+                }
+
+                listBox2.Items.Clear();
+
+                if (auto)
+                {
+
+                    for (byte j = 0; j < comboBox1.Items.Count; j++)
+                    {
+                        comboBox1.SelectedIndex = j;
+                        comboBox1_SelectedIndexChanged(null, null);
+                        button4_Click(null, null);
+                        button2_Click(null, null);
+                        for (byte i = 0; i < listBox2.Items.Count; i++)
+                        {
+                            listBox2.SelectedIndex = i;
+                            listBox2_SelectedIndexChanged(null, null);
+                        }
+                        panelForZoomed.Visible = false;
+                        panelForSearch.Visible = false;
+                        PanelForMask.Visible = false;
+                    }
+
+                }
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -195,21 +225,21 @@ namespace LABA3
             int index = listBox2.SelectedIndex;
             if (index != -1)
             {
-                bitmapForRect = (Bitmap)currentBitmap.Clone();
-                //bitmapForRect = (Bitmap)currentBitmap;
+                bitmapForRect = auto ? currentBitmap : (Bitmap)currentBitmap.Clone();
 
-                Graphics g = Graphics.FromImage(bitmapForRect);
-                g.DrawRectangle(penForRect, clusters[index].GetRectangle());
-                pictureBox1.Image = bitmapForRect;
-                g.Dispose();
-
-                panelForZoomed.Visible = true;
+                panelForZoomed.Visible = !auto;
 
                 CopyAndZoomPic(currentBitmap, mask, clusters[index].GetRectangle(), out zoomedRoadSignal, out zoomedMask);
 
                 if (checkBox2.Checked)
                 {
-                    SignDefinition();
+                    AutoSignDefinition();
+                }
+                else
+                {
+                    Graphics g = Graphics.FromImage(bitmapForRect);
+                    g.DrawRectangle(penForRect, clusters[listBox2.SelectedIndex].GetRectangle());
+                    pictureBox1.Image = bitmapForRect;
                 }
             }
         }
@@ -239,11 +269,13 @@ namespace LABA3
                 }
             }
         }
-        private void SignDefinition()
+        private void AutoSignDefinition()
         {
-            float maxScore = 0;
+            double maxScore = 0;
             byte numMask = 0;
-            Bitmap selectedRoadSign = new Bitmap(teamplates[0].Width, teamplates[0].Height);
+            bool stateOfTrust = false;
+            Graphics g = Graphics.FromImage(bitmapForRect);
+
             for (byte i = 0; i < teamplates.Length; i++)
             {
                 float countPositive = 0;
@@ -293,22 +325,48 @@ namespace LABA3
 
                     }
                 }
+
                 if (countPositive / allPixel >= maxScore)
                 {
                     maxScore = countPositive / allPixel;
-                    zoomedRoadSignal = (Bitmap)selectedRoadSign.Clone();
-                    numMask = i;
+                    stateOfTrust = maxScore > double.Parse(textBox10.Text) / 100;
+
+                    if (stateOfTrust)
+                    {
+                        zoomedRoadSignal = (Bitmap)selectedRoadSign.Clone();
+                        numMask = i;
+                    }
                 }
             }
-            pictureBox2.Image = zoomedRoadSignal;
-            pictureBox3.Image = teamplates[numMask];
-            pictureBox4.Image = zoomedMask;
-            label6.Text = $"Степень совпадения с шаблоном = {maxScore*100}%";
+
+            if (!auto)
+            {
+                pictureBox1.Image = bitmapForRect;
+                pictureBox2.Image = zoomedRoadSignal;
+                pictureBox3.Image = teamplates[numMask];
+                pictureBox4.Image = zoomedMask;
+            }
+            if (!auto || stateOfTrust)
+            {
+                g.DrawRectangle(penForRect, clusters[listBox2.SelectedIndex].GetRectangle());
+                g.DrawString($"{Math.Round(maxScore * 100, 2)}%", fontForString, brushForString,
+                    clusters[listBox2.SelectedIndex].GetRectangle().X-5, clusters[listBox2.SelectedIndex].GetRectangle().Y - 20);
+            }
+            g.Dispose();
         }
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            panelForAuto.Visible = checkBox3.Checked;
+            auto = checkBox3.Checked;
+            panelForAuto.Visible = auto;
+            panelForZoomed.Visible = !auto;
+            panelForSearch.Visible = !auto;
+            PanelForMask.Visible = !auto;
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -335,6 +393,7 @@ namespace LABA3
                 teamplates[i - 1] = new Bitmap($@"D:\Study\4 sem\TechnicalVision\Template\{i}.png");
             }
             comboBox1.SelectedIndex = 1;
+            selectedRoadSign = new Bitmap(teamplates[0].Width, teamplates[0].Height);
         }
 
         private void ChangeTextBox(string[,] RGB)
@@ -357,17 +416,22 @@ namespace LABA3
                 byte.TryParse(textBox4.Text, out cr[3]) && byte.TryParse(textBox5.Text, out cr[4]) && byte.TryParse(textBox6.Text, out cr[5]))
             {
                 DoMask(cr, currentBitmap, out mask, out pixels);
-                panelForSearch.Visible = true;
-                checkBox1.Checked = false;
-
+                if (!auto)
+                {
+                    panelForSearch.Visible = true;
+                    checkBox1.Checked = false;
+                }
             }
             else
             {
                 MessageBox.Show("Ошибка ввода данных!", "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            checkBox1.Visible = true;
-            panelForZoomed.Visible = false;
+            if (!auto)
+            {
+                checkBox1.Visible = true;
+                panelForZoomed.Visible = false;
+            }
 
             pictureBox1.Image = currentBitmap;
         }
