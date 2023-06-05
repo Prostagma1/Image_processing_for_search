@@ -17,6 +17,7 @@ namespace LABA3
         Bitmap[] teamplates = new Bitmap[5];
         List<myPixel> pixels;
         List<myCluster> clusters;
+        string[] signNames = { "Стоп","Вперёд","Разворот","Налево","Проезд\nзапрещён" };
         bool auto = false;
         public Form1()
         {
@@ -351,6 +352,8 @@ namespace LABA3
                 g.DrawRectangle(penForRect, clusters[listBox2.SelectedIndex].GetRectangle());
                 g.DrawString($"{Math.Round(maxScore * 100, 2)}%", fontForString, brushForString,
                     clusters[listBox2.SelectedIndex].GetRectangle().X-5, clusters[listBox2.SelectedIndex].GetRectangle().Y - 20);
+                g.DrawString(signNames[numMask], fontForString, brushForString,
+                    clusters[listBox2.SelectedIndex].GetRectangle().X - 5, clusters[listBox2.SelectedIndex].GetRectangle().Y + clusters[listBox2.SelectedIndex].Height);
             }
             g.Dispose();
         }
