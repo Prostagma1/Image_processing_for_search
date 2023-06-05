@@ -54,7 +54,7 @@ namespace LABA3
         private void button1_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folder = new FolderBrowserDialog();
-            folder.SelectedPath = @"D:\Study\4 sem\TechnicalVision\RoadSignsDataSet";
+            folder.SelectedPath = "D:\\Study\\4 sem\\TechnicalVision\\L3\\LABA3\\bin\\Debug\\RoadSignsDataSet";
 
             if (folder.ShowDialog() == DialogResult.OK)
             {
@@ -393,7 +393,7 @@ namespace LABA3
         {
             for (int i = 1; i < 6; i++)
             {
-                teamplates[i - 1] = new Bitmap($@"D:\Study\4 sem\TechnicalVision\Template\{i}.png");
+                teamplates[i - 1] = new Bitmap($"Template\\{i}.png");
             }
             comboBox1.SelectedIndex = 1;
             selectedRoadSign = new Bitmap(teamplates[0].Width, teamplates[0].Height);
